@@ -1,11 +1,14 @@
 package party.qwer.iris
 
+import android.annotation.SuppressLint
 import android.app.RemoteInput
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
+import androidx.core.content.FileProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -121,12 +124,21 @@ class Replier {
             sendMultiplePhotosInternal(room, listOf(base64ImageDataString))
         }
 
+        @SuppressLint("PrivateApi")
+        private fun getAppContext(): Context {
+            return Class.forName("android.app.ActivityThread")
+                .getMethod("currentApplication")
+                .invoke(null) as Context
+        }
+
         private fun sendMultiplePhotosInternal(room: Long, base64ImageDataStrings: List<String>) {
             val picDir = File(IMAGE_DIR_PATH).apply {
                 if (!exists()) {
                     mkdirs()
                 }
             }
+
+            val context = getAppContext()
 
             val uris = base64ImageDataStrings.mapIndexed { idx, base64ImageDataString ->
                 val decodedImage = Base64.decode(base64ImageDataString, Base64.DEFAULT)
@@ -136,8 +148,11 @@ class Replier {
                     writeBytes(decodedImage)
                 }
 
-                val imageUri = Uri.fromFile(imageFile)
-                mediaScan(imageUri)
+                val imageUri = FileProvider.getUriForFile(
+                    context,
+                    "party.qwer.iris.fileprovider",
+                    imageFile
+                )
                 imageUri
             }
 
@@ -153,7 +168,11 @@ class Replier {
                 putExtra("key_id", room)
                 putExtra("key_type", 1)
                 putExtra("key_from_direct_share", true)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                addFlags(
+                    Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
             }
 
             try {
@@ -169,6 +188,7 @@ class Replier {
             suspend fun send()
         }
 
+        @Suppress("unused")
         private fun mediaScan(uri: Uri) {
             val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).apply {
                 data = uri

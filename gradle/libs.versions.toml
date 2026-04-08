@@ -4,8 +4,10 @@ kotlin = "2.1.10"
 kotlinxSerializationJson = "1.8.0"
 ktorVersion = "3.1.1"
 okhttp = "4.10.0"
+androidxCore = "1.13.1"
 
 [libraries]
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
 ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktorVersion" }
