@@ -21,25 +21,25 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build Release APK
-        run: ./gradlew assembleRelease
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Iris-release
-          path: output/Iris-release.apk
+          name: Iris-debug
+          path: output/Iris-debug.apk
 
       - name: Installation Guide
         run: |
           echo "## 설치 방법" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 1. APK 다운로드" >> $GITHUB_STEP_SUMMARY
-          echo "위 **Artifacts** 섹션에서 \`Iris-release\` 를 다운로드하고 압축 해제" >> $GITHUB_STEP_SUMMARY
+          echo "위 **Artifacts** 섹션에서 \`Iris-debug\` 를 다운로드하고 압축 해제" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 2. redroid 기기에 설치" >> $GITHUB_STEP_SUMMARY
           echo '```bash' >> $GITHUB_STEP_SUMMARY
-          echo "adb -s zzomist.ddns.net:55555 install -r Iris-release.apk" >> $GITHUB_STEP_SUMMARY
+          echo "adb -s zzomist.ddns.net:55555 install -r Iris-debug.apk" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 3. 앱 재시작 (설치 후)" >> $GITHUB_STEP_SUMMARY
