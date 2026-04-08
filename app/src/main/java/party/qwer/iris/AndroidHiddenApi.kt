@@ -131,7 +131,7 @@ class AndroidHiddenApi {
                         null,
                         null,
                         0,
-                        0,
+                        intent.flags,
                         null,
                         null,
                         -3
@@ -169,7 +169,7 @@ class AndroidHiddenApi {
                         null,
                         null,
                         0,
-                        0,
+                        intent.flags,
                         null,
                         null,
                         -3
